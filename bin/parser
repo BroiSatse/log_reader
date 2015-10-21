@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+require_relative '../lib/all'
+
+puts 'No file specified, quiting' && quit(1) unless ARGV.any?
+
+client = Client.new
+client.add_statistic Statistic::VisitsPerPath
+client.add_statistic Statistic::UniqueVisitsPerPath
+
+ARGV.each do |path|
+  File.open(path, 'r') do |f|
+    client.read! f
+  end
+end
+
+Presenter::Console.new.display client.statistics
